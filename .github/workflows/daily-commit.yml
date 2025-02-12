@@ -1,0 +1,21 @@
+name: Daily Commit
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+  commit:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Commit with email mohamedashiq.syedmustafa@straive.com
+      run: |
+        git config --global user.email "mohamedashiq.syedmustafa@straive.com"
+        git config --global user.name "GitHub Actions"
+        echo "Updating README.md" >> README.md
+        git add README.md
+        git commit -m "Daily commit"
+        git push

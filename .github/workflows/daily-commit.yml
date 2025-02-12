@@ -2,9 +2,8 @@ name: Daily Commit Workflow
 
 on:
   schedule:
-    # Runs at 10:30 AM UTC every day
-    - cron: '30 10 * * *'
-  workflow_dispatch:  # Allows manual triggering
+    - cron: '59 10 * * *'
+  workflow_dispatch:
 
 jobs:
   create-daily-commit:
@@ -13,7 +12,9 @@ jobs:
     steps:
       - name: mohamedashiq.syedmustafa@straive.com
         uses: actions/checkout@v2
-        
+        with:
+          token: ${{ secrets.MY_TOKEN }}
+          
       - name: Setup Git Config
         run: |
           git config --global user.name "Ashiq-jr"
@@ -21,10 +22,12 @@ jobs:
           
       - name: Create and commit file
         run: |
-          # Create a timestamp
           echo "Last updated: $(date)" > last_updated.txt
-          
-          # Add and commit the file
           git add last_updated.txt
           git commit -m "Daily automated commit $(date)"
-          git push
+          
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.MY_TOKEN }}  # or use ${{ secrets.YOUR_PAT }}
+          branch: ${{ github.ref }}

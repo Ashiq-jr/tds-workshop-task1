@@ -1,21 +1,30 @@
-name: Daily Commit
+name: Daily Commit Workflow
 
 on:
   schedule:
-    - cron: '0 0 * * *'
+    # Runs at 10:30 AM UTC every day
+    - cron: '31 10 * * *'
+  workflow_dispatch:  # Allows manual triggering
 
 jobs:
-  commit:
+  create-daily-commit:
     runs-on: ubuntu-latest
     
     steps:
-    - uses: actions/checkout@v2
-    
-    - name: Commit with email mohamedashiq.syedmustafa@straive.com
-      run: |
-        git config --global user.email "mohamedashiq.syedmustafa@straive.com"
-        git config --global user.name "GitHub Actions"
-        echo "Updating README.md" >> README.md
-        git add README.md
-        git commit -m "Daily commit"
-        git push
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        
+      - name: Setup Git Config
+        run: |
+          git config --global user.name "Ashiq-jr"
+          git config --global user.email "mohameashiq.syedmustafa@straive.com"
+          
+      - name: Create and commit file
+        run: |
+          # Create a timestamp
+          echo "Last updated: $(date)" > last_updated.txt
+          
+          # Add and commit the file
+          git add last_updated.txt
+          git commit -m "Daily automated commit $(date)"
+          git push
